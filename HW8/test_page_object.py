@@ -32,7 +32,7 @@ def test_internet_magazin(driver):
 
     test_internet_magazin = Internet_shop(driver)
     test_internet_magazin.test_keys()
-    test_internet_magazin.click()
+    test_internet_magazin.click_()
     test_internet_magazin.cart_link()
     test_internet_magazin.checkout()
     test_internet_magazin.send_keys()

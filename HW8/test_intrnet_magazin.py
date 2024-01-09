@@ -6,7 +6,7 @@ class Internet_shop:
     
     def __init__(self, driver):
         self.driver = driver
-        self.driver.get("https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html")
+        self.driver.get("https://www.saucedemo.com/")
 
     def test_keys(self):
         #Авторизуйтесь как пользователь
@@ -14,7 +14,8 @@ class Internet_shop:
         self.driver.find_element(By.CSS_SELECTOR, "#password").send_keys("secret_sauce")
         self.driver.find_element(By.CSS_SELECTOR, "#login-button").click()
 
-    def click(self):
+    def click_(self):
+        self.driver.get("https://www.saucedemo.com/inventory.html")
         #Добавьте в корзину товары
         self.driver.find_element(By.CSS_SELECTOR, "#add-to-cart-sauce-labs-backpack").click()
         self.driver.find_element(By.CSS_SELECTOR, "#add-to-cart-sauce-labs-bolt-t-shirt").click()
