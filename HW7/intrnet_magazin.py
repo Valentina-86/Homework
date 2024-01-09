@@ -45,4 +45,4 @@ element = driver.find_element(By.CLASS_NAME, "summary_total_label").text
 driver.quit()
 
 #Проверьте, что итоговая сумма равна $58.29
-print(element)
+assert element == "58.29"
