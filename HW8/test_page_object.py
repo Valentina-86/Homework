@@ -12,7 +12,7 @@ def driver():
     yield driver
     driver.quit()
 
-def test_pr_forma(driver):
+def test_pg_forma(driver):
    
     pg_forma = Forma(driver) 
     pg_forma.send_keys("Иван", "Петров", "Ленина, 55-3", "test@skypro.com", "+7985899998787", "", "Москва", "Россия", "QA", "SkyPro")
