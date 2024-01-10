@@ -8,10 +8,10 @@ class Internet_shop:
         self.driver = driver
         self.driver.get("https://www.saucedemo.com/")
 
-    def test_keys(self):
+    def test_keys(self, user_name, password):
         #Авторизуйтесь как пользователь
-        self.driver.find_element(By.CSS_SELECTOR, "#user-name").send_keys("standard_user")
-        self.driver.find_element(By.CSS_SELECTOR, "#password").send_keys("secret_sauce")
+        self.driver.find_element(By.CSS_SELECTOR, "#user-name").send_keys(user_name)
+        self.driver.find_element(By.CSS_SELECTOR, "#password").send_keys(password)
         self.driver.find_element(By.CSS_SELECTOR, "#login-button").click()
 
     def click_(self):
@@ -29,16 +29,15 @@ class Internet_shop:
         #Нажмите Checkout.
         self.driver.find_element(By.CSS_SELECTOR, "#checkout").click()
 
-    def send_keys(self):
+    def send_keys(self, first_name, last_name, index):
         #Заполните форму своими данными:
-        self.driver.find_element(By.CSS_SELECTOR, "#first-name").send_keys("Валентина")
-        self.driver.find_element(By.CSS_SELECTOR, "#last-name").send_keys("Балашова")
-        self.driver.find_element(By.CSS_SELECTOR, "#postal-code").send_keys("454003")
+        self.driver.find_element(By.CSS_SELECTOR, "#first-name").send_keys(first_name)
+        self.driver.find_element(By.CSS_SELECTOR, "#last-name").send_keys(last_name)
+        self.driver.find_element(By.CSS_SELECTOR, "#postal-code").send_keys(index)
         #Нажмите кнопку Continue.
         self.driver.find_element(By.CSS_SELECTOR, "#continue").click()
 
     def element(self):
         #Прочитайте со страницы итоговую стоимость
-        element = self.driver.find_element(By.CLASS_NAME, "summary_total_label").text
-        #Проверьте, что итоговая сумма равна $58.29
-        assert element == 'Total: $58.29'
+        return self.driver.find_element(By.CLASS_NAME, "summary_total_label").text
+        
