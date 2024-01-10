@@ -25,7 +25,6 @@ class Internet_shop:
         #Перейдите в корзину.
         self.driver.find_element(By.CSS_SELECTOR, "a.shopping_cart_link").click()
 
-    def click_checkout(self):
         #Нажмите Checkout.
         self.driver.find_element(By.CSS_SELECTOR, "#checkout").click()
 
@@ -34,6 +33,7 @@ class Internet_shop:
         self.driver.find_element(By.CSS_SELECTOR, "#first-name").send_keys(first_name)
         self.driver.find_element(By.CSS_SELECTOR, "#last-name").send_keys(last_name)
         self.driver.find_element(By.CSS_SELECTOR, "#postal-code").send_keys(index)
+        
         #Нажмите кнопку Continue.
         self.driver.find_element(By.CSS_SELECTOR, "#continue").click()
 

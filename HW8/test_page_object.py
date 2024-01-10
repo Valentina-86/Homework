@@ -40,7 +40,6 @@ def test_internet_magazin(driver):
     test_internet_magazin.authorize('standard_user', 'secret_sauce')
     test_internet_magazin.click_goods()
     test_internet_magazin.to_cart()
-    test_internet_magazin.click_checkout()
     test_internet_magazin.send_keys("Валентина", "Балашова", "454003")
     element = test_internet_magazin.element()
 
