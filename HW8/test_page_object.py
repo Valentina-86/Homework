@@ -29,7 +29,6 @@ def test_calculyator(driver):
     test_calculyator = Calculaytor(driver)
     test_calculyator.delay("45")
     test_calculyator.click_buttons('7', '+', '8', '=')
-    test_calculyator.sleep(45)
     result_window = test_calculyator.result_window()
 
     assert result_window.text == "15"

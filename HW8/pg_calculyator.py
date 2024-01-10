@@ -1,5 +1,7 @@
 import time
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class Calculaytor:
@@ -32,9 +34,8 @@ class Calculaytor:
             if element.text == button4:
                 element.click()
 
-    # Ждем 45 секунд
-    def sleep(self, sleep):
-        time.sleep(sleep)
+        # Ждем 45 секунд
+        WebDriverWait(self.driver, 46).until(EC.text_to_be_present_in_element((By.CLASS_NAME, 'screen'), '15'))
 
     # Проверяем, что в окне отобразится результат 15
     def result_window(self):

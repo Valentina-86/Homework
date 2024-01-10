@@ -39,7 +39,7 @@ def test_slow_calculator(driver):
             element.click()
 
     # Ждем 45 секунд
-    WebDriverWait(driver, 45).until(EC.presence_of_element_located((By.CLASS_NAME, "screen")))
+    WebDriverWait(driver, 46).until(EC.text_to_be_present_in_element((By.CLASS_NAME, 'screen'), '15'))
 
     # Проверяем, что в окне отобразится результат 15
     result_window = driver.find_element(By.CLASS_NAME, "screen").text
