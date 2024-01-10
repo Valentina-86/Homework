@@ -28,7 +28,7 @@ def test_calculyator(driver):
 
     test_calculyator = Calculaytor(driver)
     test_calculyator.delay("45")
-    test_calculyator.click('7', '+', '8', '=')
+    test_calculyator.click_buttons('7', '+', '8', '=')
     test_calculyator.sleep(45)
     result_window = test_calculyator.result_window()
 
@@ -37,10 +37,10 @@ def test_calculyator(driver):
 def test_internet_magazin(driver):
 
     test_internet_magazin = Internet_shop(driver)
-    test_internet_magazin.test_keys('standard_user', 'secret_sauce')
-    test_internet_magazin.click_()
-    test_internet_magazin.cart_link()
-    test_internet_magazin.checkout()
+    test_internet_magazin.authorize('standard_user', 'secret_sauce')
+    test_internet_magazin.click_goods()
+    test_internet_magazin.to_cart()
+    test_internet_magazin.click_checkout()
     test_internet_magazin.send_keys("Валентина", "Балашова", "454003")
     element = test_internet_magazin.element()
 

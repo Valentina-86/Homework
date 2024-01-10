@@ -15,7 +15,7 @@ class Calculaytor:
         delay_input.send_keys(time)
 
     # Нажимаем на кнопки 7, +, 8, =
-    def click(self, button1, button2, button3, button4):
+    def click_buttons(self, button1, button2, button3, button4):
         elements = self.driver.find_elements(By.CLASS_NAME, "btn-outline-primary")
         elements.extend(self.driver.find_elements(By.CLASS_NAME, "btn-outline-success"))
         elements.extend(self.driver.find_elements(By.CLASS_NAME, "btn-outline-warning"))

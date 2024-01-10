@@ -8,24 +8,24 @@ class Internet_shop:
         self.driver = driver
         self.driver.get("https://www.saucedemo.com/")
 
-    def test_keys(self, user_name, password):
+    def authorize(self, user_name, password):
         #Авторизуйтесь как пользователь
         self.driver.find_element(By.CSS_SELECTOR, "#user-name").send_keys(user_name)
         self.driver.find_element(By.CSS_SELECTOR, "#password").send_keys(password)
         self.driver.find_element(By.CSS_SELECTOR, "#login-button").click()
 
-    def click_(self):
+    def click_goods(self):
         self.driver.get("https://www.saucedemo.com/inventory.html")
         #Добавьте в корзину товары
         self.driver.find_element(By.CSS_SELECTOR, "#add-to-cart-sauce-labs-backpack").click()
         self.driver.find_element(By.CSS_SELECTOR, "#add-to-cart-sauce-labs-bolt-t-shirt").click()
         self.driver.find_element(By.CSS_SELECTOR, "#add-to-cart-sauce-labs-onesie").click()
 
-    def cart_link(self):
+    def to_cart(self):
         #Перейдите в корзину.
         self.driver.find_element(By.CSS_SELECTOR, "a.shopping_cart_link").click()
 
-    def checkout(self):
+    def click_checkout(self):
         #Нажмите Checkout.
         self.driver.find_element(By.CSS_SELECTOR, "#checkout").click()
 
