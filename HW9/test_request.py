@@ -10,7 +10,7 @@ def get_headers():
     #авторизация
     resp = requests.post(base_url+'/auth/login', json=creds)
     token = resp.json()["userToken"]
-    #получение списка
+    #получение токена
     my_headers= {}
     my_headers["x-client-token"] = token
 
