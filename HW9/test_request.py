@@ -6,11 +6,11 @@ my_company = {'company' : 3687}
 id_employee = {'id' : 1719}
 
 
-def get_headers():
-    #авторизация
+def get_headers() -> dict:
+    #функция возвращающая headers
     resp = requests.post(base_url+'/auth/login', json=creds)
     token = resp.json()["userToken"]
-    #получение токена
+    
     my_headers= {}
     my_headers["x-client-token"] = token
 
@@ -18,17 +18,19 @@ def get_headers():
 
 def test_simple_reg():
     resp = requests.get(base_url+'/company')
-    response_body = resp.json()
 
     assert resp.status_code == 200
     
 def test_auth():
+    #авторизация
     resp = requests.post(base_url+'/auth/login', json=creds)
-    token = resp.json()["userToken"]
+
     assert resp.status_code == 201
 
 def test_create_employee():
+    #получение списка пользователей
     resp = requests.get(f'{base_url}/employee/{my_company['company']}', headers=get_headers())
+
     assert resp.status_code == 200
 
 def test_new_employee():
@@ -46,13 +48,15 @@ def test_new_employee():
         "isActive": True
     }
 
-    #создание пользователя
+    #создание нового пользователя
     resp = requests.post(base_url+'/employee', json=body, headers=get_headers())
+
     assert resp.status_code == 201
 
 def test_employee():
     #получить сотрудника по id
     resp = requests.get(f'{base_url}/employee/{id_employee['id']}', headers=get_headers())
+
     assert resp.status_code == 200
 
 def test_update_employee():
@@ -67,4 +71,5 @@ def test_update_employee():
     
     #изменить информацию о сотруднике
     resp = requests.patch(f'{base_url}/employee/{id_employee['id']}',json=body, headers=get_headers())
+
     assert resp.status_code == 200
