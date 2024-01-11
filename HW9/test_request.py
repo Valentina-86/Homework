@@ -124,7 +124,7 @@ def test_update_employee():
         "phone": "+79193369589",
         "isActive": True
     }
-
+    
     #изменить информацию о сотруднике
     resp = requests.patch(f'{base_url}/employee/{id_employee['id']}',json=body, headers=my_headers)
     assert resp.status_code == 200
