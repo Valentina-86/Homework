@@ -16,22 +16,26 @@ def get_headers() -> dict:
 
     return my_headers
 
-def test_simple_reg():
-    resp = requests.get(base_url+'/company')
+    assert my_headers is not None
 
-    assert resp.status_code == 200
+def test_simple_reg():
+    company = requests.get(base_url+'/company')
+
+    assert company.status_code == 200
+    assert company is not None
     
 def test_auth():
     #авторизация
-    resp = requests.post(base_url+'/auth/login', json=creds)
+    auth = requests.post(base_url+'/auth/login', json=creds)
 
-    assert resp.status_code == 201
+    assert auth.status_code == 201
 
 def test_create_employee():
     #получение списка пользователей
-    resp = requests.get(f'{base_url}/employee/{my_company['company']}', headers=get_headers())
+    get_employee = requests.get(f'{base_url}/employee/{my_company['company']}', headers=get_headers())
 
-    assert resp.status_code == 200
+    assert get_employee.status_code == 200
+    assert my_company is not None
 
 def test_new_employee():
     #тело запроса
@@ -49,15 +53,21 @@ def test_new_employee():
     }
 
     #создание нового пользователя
-    resp = requests.post(base_url+'/employee', json=body, headers=get_headers())
+    new_employee = requests.post(base_url+'/employee', json=body, headers=get_headers())
+    return new_employee.json()["id"]
 
     assert resp.status_code == 201
+    assert body is not None
+    assert get_headers is not None
+
+
 
 def test_employee():
     #получить сотрудника по id
-    resp = requests.get(f'{base_url}/employee/{id_employee['id']}', headers=get_headers())
+    employee = requests.get(f'{base_url}/employee/{id_employee['id']}', headers=get_headers())
 
-    assert resp.status_code == 200
+    assert employee.status_code == 200
+    assert id_employee is not None
 
 def test_update_employee():
     #тело запроса
@@ -73,3 +83,6 @@ def test_update_employee():
     resp = requests.patch(f'{base_url}/employee/{id_employee['id']}',json=body, headers=get_headers())
 
     assert resp.status_code == 200
+    assert body is not None
+    assert get_headers is not None
+    assert id_employee is not None
