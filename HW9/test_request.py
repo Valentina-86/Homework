@@ -1,22 +1,51 @@
-import requests
 from employee import Employee
 
-def test_employee():
+creds = {'username': 'raphael', 'password': 'cool-but-crude'}
+base_url = 'https://x-clients-be.onrender.com'
+body_new_employee = {
+    "id": 0,
+    "firstName": "Valentina",
+    "lastName": "Balashova",
+    "middleName": "Alexsandrovna",
+    "companyId": None,
+    "email": "lentina86@mail.ru",
+    "url": "www",
+    "phone": "+79193369589",
+    "birthdate": "2024-01-11T07:45:04.659Z",
+    "isActive": True
+}
+body_for_patch = {
+    "lastName": "Dolgopolova",
+    "email": "lentina86@mail.ru",
+    "url": "www",
+    "phone": "+79193369589",
+    "isActive": True
+}
 
-    test_employee = Employee('https://x-clients-be.onrender.com')
-    test_employee.creds('raphael', 'cool-but-crude')
-    test_employee.authorize()
-    test_employee.get_headers()
-    test_employee.simple_reg()
-    test_employee.create_employee()
-    test_employee.new_employee(0, "Valentina", "Balashova", "Alexsandrovna", "lentina86@mail.ru", "www", \
-                               "+79193369589", "2024-01-11T07:45:04.659Z", True)
-    test_employee.employee()
-    test_employee.update_employee("Dolgopolova", "lentina86@mail.ru", "www", "+79193369589", True)
 
-    assert test_employee.my_headers == 'token'
-    assert test_employee.company == id
-    assert test_employee.get_employee is not None
-    assert test_employee.new == id
-    assert test_employee.spisok == id
-    assert test_employee.resp == id
+def tests():
+    test_employee = Employee(base_url)
+    headers = test_employee.get_headers(creds)
+    assert headers is not None
+
+    response = test_employee.get_company()
+    body_new_employee['companyId'] = response.json()[0]['id']
+    assert response.status_code == 200
+
+    response = test_employee.authorize(creds)
+    assert response.status_code == 201
+
+    response = test_employee.get_employee(headers, body_new_employee['companyId'])
+    assert response.status_code == 200
+
+    response = test_employee.new_employee(creds, body_new_employee, headers)
+    id_ = response.json()['id']
+    assert response.status_code == 201
+
+    response = test_employee.get_employee_by_id(id_, headers)
+    assert response.status_code == 200
+    assert response.json().get('lastName') == 'Balashova'
+
+    response = test_employee.update_employee(id_, body_for_patch, headers)
+    assert response.status_code == 200
+    assert response.json().get('id') == id_
