@@ -26,8 +26,7 @@ headers = test_employee.get_headers(creds)
 response = test_employee.get_company()
 body_new_employee['companyId'] = response.json()[0]['id']
 test_employee.authorize(creds)
-response = test_employee.new_employee(creds, body_new_employee, headers)
-id_ = response.json()['id']
+
 
 def test_get_employee():
     
@@ -44,13 +43,17 @@ def test_create_employee():
 
 
 def test_get_employee_by_id():
-   
+
+    response = test_employee.new_employee(creds, body_new_employee, headers)
+    id_ = response.json()['id']
     response = test_employee.get_employee_by_id(id_, headers)
     assert response.status_code == 200
     assert response.json().get('lastName') == 'Balashova'
 
 def test_update_employee():
-    
+
+    response = test_employee.new_employee(creds, body_new_employee, headers)
+    id_ = response.json()['id']
     response = test_employee.update_employee(id_, body_for_patch, headers)
     assert response.status_code == 200
     assert response.json().get('id') == id_
