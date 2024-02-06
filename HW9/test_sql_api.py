@@ -20,7 +20,7 @@ body_new_employee = {
     "companyId": None,
     "email": "ftyftjwvf@mai.ru",
     "url": "www",
-    "phone": "+79193369589",
+    "phone": "+123456789",
     "birthdate": "2024-01-11T07:45:04.659Z",
     "isActive": True
 }
@@ -30,7 +30,7 @@ body_for_patch = {
     "lastName": "Dolgopolova",
     "email": "lentina86@mail.ru",
     "url": "www",
-    "phone": "+79193369589",
+    "phone": "+123456789",
     "isActive": True
 }
 
@@ -55,14 +55,14 @@ def test_create_and_get_employee(setup_db):
     company_id = setup_db
     len_before = len(bd_instance.get_employees())
 
-    bd_instance.insert_employee("Mikki", "Rurk", "+123456789", company_id)
+    bd_instance.insert_employee("Валентина", "Балашова", "+123456789", company_id)
 
     len_after = len(bd_instance.get_employees())
 
     assert len_after - len_before == 1
 
     employee_list = api_instance.get_employee(headers, company_id)
-    assert any(employee["firstName"] == "Mikki" and employee["lastName"] == "Rurk" for employee in employee_list.json())
+    assert any(employee["firstName"] == "Валентина" and employee["lastName"] == "Балашова" for employee in employee_list.json())
 
 def test_update_employee(setup_db):
     company_id = setup_db
@@ -72,10 +72,10 @@ def test_update_employee(setup_db):
     assert len(employees) > 0
 
     employee_id = employees[0]["id"]
-    bd_instance.update_employee(employee_id, "Jane", "DoeUpdated", "+123456789", company_id)
+    bd_instance.update_employee(employee_id, "Jane", "Doe", "+123456789", company_id)
 
     updated_employee = bd_instance.get_employee_by_id(employee_id)
-    assert updated_employee["last_name"] == "DoeUpdated"
+    assert updated_employee["last_name"] == "Doe"
 
 def test_delete_employee(setup_db):
     company_id = setup_db
