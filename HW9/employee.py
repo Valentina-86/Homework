@@ -25,9 +25,9 @@ class API:
         resp = requests.get(f'{self.base_url}/employee/{id_}', headers=headers)
         return resp
 
-    def new_employee(self, creds, body, headers):
+    def new_employee(self, creds, body_new_employee, headers):
         # создание нового пользователя
-        resp = requests.post(self.base_url + '/employee', json=body, headers=headers)
+        resp = requests.post(self.base_url + '/employee', json=body_new_employee, headers=headers)
         return resp
 
     def get_employee_by_id(self, id_, headers):
@@ -35,7 +35,7 @@ class API:
         resp = requests.get(f'{self.base_url}/employee/{id_}', headers=headers)
         return resp
 
-    def update_employee(self, id_, body, headers):
+    def update_employee(self, id_, body_for_patch, headers):
         # изменить информацию о сотруднике
-        resp = requests.patch(f'{self.base_url}/employee/{id_}', json=body, headers=headers)
+        resp = requests.patch(f'{self.base_url}/employee/{id_}', json=body_for_patch, headers=headers)
         return resp
