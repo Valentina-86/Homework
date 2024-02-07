@@ -1,10 +1,6 @@
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.sql import text
 
-# logging.basicConfig()
-# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-
-
 class BD:
     scripts = {
         "create": text("""
