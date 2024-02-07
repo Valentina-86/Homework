@@ -1,10 +1,12 @@
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.sql import text
 
+# logging.basicConfig()
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 
 class BD:
-    __scripts = {
+    scripts = {
         "create": text("""
             CREATE TABLE IF NOT EXISTS employee (
                 id SERIAL PRIMARY KEY,
@@ -24,6 +26,7 @@ class BD:
         "insert": text("""
             INSERT INTO employee (first_name, last_name, phone, company_id)
             VALUES (:first_name, :last_name, :phone, :company_id)
+            RETURNING id
         """),
         "update": text("""
             UPDATE employee SET first_name = :first_name, last_name = :last_name,
@@ -34,7 +37,7 @@ class BD:
         "delete": text("DELETE FROM employee WHERE id = :employee_id")
     }
 
-    def __init__(self, connection_string):
+    def __init(self, connection_string):
         self.db = create_engine(connection_string)
         self.metadata = MetaData()
         self.metadata.reflect(bind=self.db)
@@ -46,35 +49,38 @@ class BD:
 
     def get_employees(self):
         with self.db.connect() as connection:
-            return connection.execute(self.__scripts["select"]).fetchall()
+            return list(connection.execute(self.__scripts["select"]).mappings())
 
     def insert_employee(self, first_name, last_name, phone, company_id):
         with self.db.connect() as connection:
-         return connection.execute(self.__scripts["insert"], {
-            'first_name': first_name,
-            'last_name': last_name,
-            'phone': phone,
-            'company_id': company_id
-        })
-
+            query = self.__scripts["insert"]
+            result = connection.execute(query, {
+                'first_name': first_name,
+                'last_name': last_name,
+                'phone': phone,
+                'company_id': company_id
+            })
+            connection.commit()
+            return result.fetchone()[0]
 
     def update_employee(self, employee_id, first_name, last_name, middle_name, phone, email, avatar_url):
         with self.db.connect() as connection:
-            return connection.execute(self.__scripts["update"], {
-                                    'employee_id' : employee_id,
-                                    'first_name' : first_name,
-                                    'last_name' : last_name,
-                                    'middle_name' : middle_name,
-                                    'phone' : phone,
-                                    'email' : email,
-                                    'avatar_url' : avatar_url})
+            connection.execute(self.__scripts["update"], {
+                'employee_id': employee_id,
+                'first_name': first_name,
+                'last_name': last_name,
+                'middle_name': middle_name,
+                'phone': phone,
+                'email': email,
+                'avatar_url': avatar_url})
+            connection.commit()
 
-    
-    
     def get_employee_by_id(self, employee_id):
-        result = self.db.execute(self.__scripts["get_employee_by_id"], employee_id=employee_id)
+        with self.db.connect() as connection:
+            result = connection.execute(self.__scripts["get_employee_by_id"], {'employee_id': employee_id})
         return result.fetchone()
-    
+
     def delete_employee(self, employee_id):
         with self.db.connect() as connection:
-            return connection.execute(self.__scripts["delete"], employee_id=employee_id)
+            connection.execute(self.__scripts["delete"], {'employee_id': employee_id})
+            connection.commit()
