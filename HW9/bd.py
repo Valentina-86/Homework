@@ -33,7 +33,7 @@ class BD:
         "delete": text("DELETE FROM employee WHERE id = :employee_id")
     }
 
-    def __init(self, connection_string):
+    def __init__(self, connection_string):
         self.db = create_engine(connection_string)
         self.metadata = MetaData()
         self.metadata.reflect(bind=self.db)
@@ -41,15 +41,15 @@ class BD:
 
     def create_table(self):
         with self.db.connect() as connection:
-            connection.execute(self.__scripts["create"])
+            connection.execute(self.scripts["create"])
 
     def get_employees(self):
         with self.db.connect() as connection:
-            return list(connection.execute(self.__scripts["select"]).mappings())
+            return list(connection.execute(self.scripts["select"]).mappings())
 
     def insert_employee(self, first_name, last_name, phone, company_id):
         with self.db.connect() as connection:
-            query = self.__scripts["insert"]
+            query = self.scripts["insert"]
             result = connection.execute(query, {
                 'first_name': first_name,
                 'last_name': last_name,
@@ -61,7 +61,7 @@ class BD:
 
     def update_employee(self, employee_id, first_name, last_name, middle_name, phone, email, avatar_url):
         with self.db.connect() as connection:
-            connection.execute(self.__scripts["update"], {
+            connection.execute(self.scripts["update"], {
                 'employee_id': employee_id,
                 'first_name': first_name,
                 'last_name': last_name,
@@ -73,10 +73,10 @@ class BD:
 
     def get_employee_by_id(self, employee_id):
         with self.db.connect() as connection:
-            result = connection.execute(self.__scripts["get_employee_by_id"], {'employee_id': employee_id})
+            result = connection.execute(self.scripts["get_employee_by_id"], {'employee_id': employee_id})
         return result.fetchone()
 
     def delete_employee(self, employee_id):
         with self.db.connect() as connection:
-            connection.execute(self.__scripts["delete"], {'employee_id': employee_id})
+            connection.execute(self.scripts["delete"], {'employee_id': employee_id})
             connection.commit()
