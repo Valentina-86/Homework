@@ -1,92 +1,48 @@
-import pytest
-from employee import API
 from bd import BD
+from employee import API
+import pytest
 
-# Подключение к БД
-db_string = 'postgresql://x_clients_user:axcmq7V3QLCQwgL39GymqgasJhUlDbH4@dpg-cl53o6ql7jac73cbgi2g-a.frankfurt-postgres.render.com/x_clients'
-bd_instance = BD(db_string)
+api = API("https://x-clients-be.onrender.com")
+db = BD("postgresql://x_clients_user:x7ngHjC1h08a85bELNifgKmqZa8KIR40@dpg-cn1542en7f5s73fdrigg-a.frankfurt-postgres.render.com/x_clients_xxet")
 
-# Подключение к API
-creds = {'username': 'raphael', 'password': 'cool-but-crude'}
-base_url = 'https://x-clients-be.onrender.com'
-api_instance = API(base_url)
+name = "Skyeng"
+descr = "test"
+company = api.create_company(name, descr)
+new_id = company["id"]
 
-# Body employee API
-body_new_employee = {
-    "id": 0,
-    "firstName": "Valentina",
-    "lastName": "Balashova",
-    "middleName": "Alexsandrovna",
-    "companyId": None,
-    "email": "ftyftjwvf@mai.ru",
-    "url": "www",
-    "phone": "+123456789",
-    "birthdate": "2024-01-11T07:45:04.659Z",
-    "isActive": True
-}
+def setup_module(module):
+    db.create_table()
 
-# Body update API
-body_for_patch = {
-    "lastName": "Dolgopolova",
-    "email": "lentina86@mail.ru",
-    "url": "www",
-    "phone": "+123456789",
-    "isActive": True
-}
+def teardown_module(module):
+    db.db.dispose()
 
-# Получение id компании через API
-headers = api_instance.get_headers(creds)
-response = api_instance.get_company()
-company_id = response.json()[0]['id']
+def test_create_and_get_employee():
 
-body_db_new_employee = [{"first_name":"Valentina", "last_name":"Balashova", "middle_name":"Alexsandrovna", "phone":"+79193369589", \
-        "email":"lentina86@mail.ru", "birthdate":"2024-01-11T07:45:04.659Z", "avatar_url":"www", "company_id" : company_id}
-        ]
-db_email_employee = 'ftyftjwvf@mai.ru'
+    db.insert_employee("Mikki", "Maus", "+123456789", new_id)
+    employee_list = api.get_list_employee(new_id)
+    assert any(employee["firstName"] == "Mikki" and employee["lastName"] == "Maus" for employee in employee_list)
 
-@pytest.fixture(scope="module")
-def setup_db():
-    # Подготовка БД и получение id компании
-    company_id = bd_instance.insert_company("TestCompany")
-    yield company_id
-    bd_instance.delete_company(company_id)
 
-def test_create_and_get_employee(setup_db):
-    company_id = setup_db
-    len_before = len(bd_instance.get_employees())
+def test_update_employee():
 
-    bd_instance.insert_employee("Валентина", "Балашова", "+123456789", company_id)
-
-    len_after = len(bd_instance.get_employees())
-
-    assert len_after - len_before == 1
-
-    employee_list = api_instance.get_employee(headers, company_id)
-    assert any(employee["firstName"] == "Валентина" and employee["lastName"] == "Балашова" for employee in employee_list.json())
-
-def test_update_employee(setup_db):
-    company_id = setup_db
-    bd_instance.insert_employee("Jane", "Doe", "+123456789", company_id)
-
-    employees = bd_instance.get_employees()
-    assert len(employees) > 0
+    db.insert_employee("Mikki", "Maus", "+123456789", new_id)
+    employees = db.get_employees()
 
     employee_id = employees[0]["id"]
-    bd_instance.update_employee(employee_id, "Jane", "Doe", "+123456789", company_id)
+    db.update_employee(employee_id, "Mikki", "Mos", "Middle", "+987654321", "mikki.mos@example.com", "http://example.com")
 
-    updated_employee = bd_instance.get_employee_by_id(employee_id)
-    assert updated_employee["last_name"] == "Doe"
+    updated_employee = db.get_employees()[0]
+    assert updated_employee["first_name"] == "Mikki"
+    assert updated_employee["last_name"] == "Mos"
+    assert updated_employee["phone"] == "+987654321"
 
-def test_delete_employee(setup_db):
-    company_id = setup_db
-    bd_instance.insert_employee("John", "Doe", "+123456789", company_id)
-
-    len_before = len(bd_instance.get_employees())
-
-    employees = bd_instance.get_employees()
+def test_delete_employee():
+    db.insert_employee("Mikki", "Mos", "+123456789", new_id)
+    len_before = len(db.get_employees())
+    employees = db.get_employees()
     employee_id = employees[0]["id"]
-    bd_instance.delete_employee(employee_id)
+    db.delete_employee(employee_id)
 
-    len_after = len(bd_instance.get_employees())
+    len_after = len(db.get_employees())
 
     assert len_before - len_after == 1

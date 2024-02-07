@@ -1,41 +1,67 @@
 import requests
 
+
 class API:
-    def __init__(self, base_url):
-        self.base_url = base_url
 
-    def get_headers(self, creds) -> dict:
-        # функция возвращающая headers
-        resp = requests.post(self.base_url + '/auth/login', json=creds)
-        token = resp.json()["userToken"]
-        my_headers = {"x-client-token": token}
-        return my_headers
+    def __init__(self, url):
+        self.url = url
 
-    def get_company(self):
-        resp = requests.get(self.base_url + '/company')
-        return resp
+    def get_token(self, user='raphael', password='cool-but-crude'):
+        creds = {
+            'username': user,
+            'password': password
+        }
+        resp = requests.post(f"{self.url}/auth/login", json=creds)
+        return resp.json()["userToken"]
 
-    def authorize(self, creds):
-        # авторизация
-        resp = requests.post(self.base_url + '/auth/login', json=creds)
-        return resp
+    def create_company(self, name, description=''):
+        company = {
+            "name": name,
+            "description": description
+        }
+        my_headers = {}
+        my_headers["x-client-token"] = self.get_token()
+        resp = requests.post(f"{self.url}/company", json=company, headers=my_headers)
+        return resp.json()
 
-    def get_employee(self, headers, id_):
-        # получение списка пользователей
-        resp = requests.get(f'{self.base_url}/employee/{id_}', headers=headers)
-        return resp
+    def get_list_employee(self, id):
+        my_params = {
+            "company": id
+        }
+        resp = requests.get(f"{self.url}/employee", params=my_params)
+        return resp.json()
 
-    def new_employee(self, creds, body_new_employee, headers):
-        # создание нового пользователя
-        resp = requests.post(self.base_url + '/employee', json=body_new_employee, headers=headers)
-        return resp
+    def get_employee_by_id(self, id_employee):
+        resp = requests.get(f"{self.url}/employee/{id_employee}")
+        return resp.json()
 
-    def get_employee_by_id(self, id_, headers):
-        # получить сотрудника по id
-        resp = requests.get(f'{self.base_url}/employee/{id_}', headers=headers)
-        return resp
+    def add_new_employee(self, new_id, first_name, last_name):
+        employee = {
+            "id": 1,
+            "firstName": first_name,
+            "lastName": last_name,
+            "middleName": "-",
+            "companyId": new_id,
+            "email": "test@test.com",
+            "url": "string",
+            "phone": "89999999999",
+            "birthdate": "2023-12-25T18:54:13.783Z",
+            "isActive": 'true'
+        }
 
-    def update_employee(self, id_, body_for_patch, headers):
-        # изменить информацию о сотруднике
-        resp = requests.patch(f'{self.base_url}/employee/{id_}', json=body_for_patch, headers=headers)
-        return resp
+        my_headers = {}
+        my_headers["x-client-token"] = self.get_token()
+        resp = requests.post(f"{self.url}/employee", headers=my_headers, json=employee)
+        return resp.json()
+
+    def update_employee_info(self, id_employee, last_name, email):
+        user_info = {
+            "lastName": last_name,
+            "email": email,
+            "isActive": True
+        }
+
+        my_headers = {}
+        my_headers["x-client-token"] = self.get_token()
+        resp = requests.patch(f"{self.url}/employee/{id_employee}", headers=my_headers, json=user_info)
+        return resp.json()
