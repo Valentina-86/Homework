@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.sql import text
 
+
+
 class BD:
     __scripts = {
         "create": text("""
@@ -28,6 +30,7 @@ class BD:
             middle_name = :middle_name, phone = :phone, email = :email, avatar_url = :avatar_url
             WHERE id = :employee_id
         """),
+        "get_employee_by_id": text("SELECT * FROM employee WHERE id = :employee_id"),
         "delete": text("DELETE FROM employee WHERE id = :employee_id")
     }
 
@@ -47,24 +50,31 @@ class BD:
 
     def insert_employee(self, first_name, last_name, phone, company_id):
         with self.db.connect() as connection:
-            return connection.execute(self.__scripts["insert"],
-                                 first_name,
-                                 last_name,
-                                 phone,
-                                 company_id)
+         return connection.execute(self.__scripts["insert"], {
+            'first_name': first_name,
+            'last_name': last_name,
+            'phone': phone,
+            'company_id': company_id
+        })
+
 
     def update_employee(self, employee_id, first_name, last_name, middle_name, phone, email, avatar_url):
         with self.db.connect() as connection:
-            return connection.execute(self.__scripts["update"],
-                                    employee_id = employee_id,
-                                    first_name = first_name,
-                                    last_name = last_name,
-                                    middle_name = middle_name,
-                                    phone = phone,
-                                    email = email,
-                                    avatar_url = avatar_url)
+            return connection.execute(self.__scripts["update"], {
+                                    'employee_id' : employee_id,
+                                    'first_name' : first_name,
+                                    'last_name' : last_name,
+                                    'middle_name' : middle_name,
+                                    'phone' : phone,
+                                    'email' : email,
+                                    'avatar_url' : avatar_url})
 
+    
+    
+    def get_employee_by_id(self, employee_id):
+        result = self.db.execute(self.__scripts["get_employee_by_id"], employee_id=employee_id)
+        return result.fetchone()
+    
     def delete_employee(self, employee_id):
         with self.db.connect() as connection:
             return connection.execute(self.__scripts["delete"], employee_id=employee_id)
-        
