@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.sql import text
 
-class Table:
+class TableBd:
     scripts = {
         "create": text("""
             CREATE TABLE IF NOT EXISTS employee (
@@ -33,26 +33,32 @@ class Table:
         "delete": text("DELETE FROM employee WHERE id = :employee_id")
     }
 
-    def __init__(self, connection_string):
+    def __init__(self, connection_string:str):
+        """
+        Инициализирует экземпляр класса EmployeeTable и создает подключение к базе данных.
+        """
         self.db = create_engine(connection_string)
         self.metadata = MetaData()
         self.metadata.reflect(bind=self.db)
         self.table = Table('employee', self.metadata, autoload=True)
 
     def create_table(self):
+        """
+        Создает таблицу employee в базе данных, если она еще не существует.
+        """
         with self.db.connect() as connection:
             connection.execute(self.scripts["create"])
     
-    def get_employees(self):
+    def get_employees(self) -> list:
         """
-            Вывести список пользователей
+        Возвращает список всех сотрудников из таблицы employee.
         """
         with self.db.connect() as connection:
             return list(connection.execute(self.scripts["select"]).mappings())
     
-    def insert_employee(self, first_name, last_name, phone, company_id):
+    def insert_employee(self, first_name:str, last_name:str, phone:str, company_id:int) -> int:
         """
-            Добавить нового пользователя
+        Добавляет нового сотрудника в таблицу employee и возвращает его ID.
         """
         with self.db.connect() as connection:
             query = self.scripts["insert"]
@@ -65,9 +71,9 @@ class Table:
             connection.commit()
             return result.fetchone()[0]
     
-    def update_employee(self, employee_id, first_name, last_name, middle_name, phone, email, avatar_url):
+    def update_employee(self, employee_id:int, first_name:str, last_name:str, middle_name:str, phone:str, email:str, avatar_url:str):
         """
-            Отредактировать пользователя по id
+        Обновляет информацию о сотруднике в таблице employee.
         """
         with self.db.connect() as connection:
             connection.execute(self.scripts["update"], {
@@ -80,17 +86,17 @@ class Table:
                 'avatar_url': avatar_url})
             connection.commit()
 
-    def get_employee_by_id(self, employee_id):
+    def get_employee_by_id(self, employee_id:int) -> dict:
         """
-            Вывести список пользователей
+        Возвращает информацию о сотруднике по его ID.
         """
         with self.db.connect() as connection:
             result = connection.execute(self.scripts["get_employee_by_id"], {'employee_id': employee_id})
         return result.fetchone()
 
-    def delete_employee(self, employee_id):
+    def delete_employee(self, employee_id:int):
         """
-            Удалить пользователя по id
+        Удаляет сотрудника из таблицы employee по его ID.
         """
         with self.db.connect() as connection:
             connection.execute(self.scripts["delete"], {'employee_id': employee_id})

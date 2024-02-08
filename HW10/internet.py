@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 
+
 class Internet_shop:
 
     
@@ -7,9 +8,12 @@ class Internet_shop:
         self.driver = driver
         self.driver.get("https://www.saucedemo.com/")
 
-    def authorize(self, user_name, password):
+    def authorize(self, user_name:str, password:str):
         """
-            Авторизоваться как пользователь
+        Выполняет авторизацию пользователя на сайте.
+
+        Побочные эффекты:
+        Вводит имя пользователя и пароль в соответствующие поля и нажимает кнопку входа.
         """
         self.driver.find_element(By.CSS_SELECTOR, "#user-name").send_keys(user_name)
         self.driver.find_element(By.CSS_SELECTOR, "#password").send_keys(password)
@@ -18,7 +22,10 @@ class Internet_shop:
     def click_goods(self):
         self.driver.get("https://www.saucedemo.com/inventory.html")
         """
-            Добавить в корзину товары
+        Добавляет выбранные товары в корзину покупок.
+
+        Побочные эффекты:
+        Переходит на страницу с товарами и добавляет указанные товары в корзину.
         """
         self.driver.find_element(By.CSS_SELECTOR, "#add-to-cart-sauce-labs-backpack").click()
         self.driver.find_element(By.CSS_SELECTOR, "#add-to-cart-sauce-labs-bolt-t-shirt").click()
@@ -26,31 +33,34 @@ class Internet_shop:
 
     def to_cart(self):
         """
-            Перейти в корзину.
+        Переходит в корзину и начинает процесс оформления заказа.
+
+        Побочные эффекты:
+        Переходит в корзину и нажимает кнопку оформления заказа (Checkout).
         """
         self.driver.find_element(By.CSS_SELECTOR, "a.shopping_cart_link").click()
 
-        """
-            Нажать Checkout.
-        """
         self.driver.find_element(By.CSS_SELECTOR, "#checkout").click()
 
-    def send_keys(self, first_name, last_name, index):
+    def send_keys(self, first_name:str, last_name:str, index:str):
         """
-            Заполнить форму своими данными
+        Заполняет форму оформления заказа данными пользователя.
+
+        Побочные эффекты:
+        Заполняет поля формы данными и нажимает кнопку продолжения оформления заказа (Continue).
         """
         self.driver.find_element(By.CSS_SELECTOR, "#first-name").send_keys(first_name)
         self.driver.find_element(By.CSS_SELECTOR, "#last-name").send_keys(last_name)
         self.driver.find_element(By.CSS_SELECTOR, "#postal-code").send_keys(index)
         
-        """
-            Нажать кнопку Continue
-        """
         self.driver.find_element(By.CSS_SELECTOR, "#continue").click()
 
-    def element(self):
+    def element(self) -> str:
         """
-            Прочитать на странице итоговую стоимость
+        Возвращает элемент, содержащий итоговую стоимость заказа.
+
+        Возвращает:
+        WebElement: Элемент, содержащий текст с итоговой стоимостью заказа.
         """
         return self.driver.find_element(By.CLASS_NAME, "summary_total_label").text
         

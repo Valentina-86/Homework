@@ -4,23 +4,36 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
+
 class Calculaytor:
         
     def __init__(self, driver):
         self.driver = driver
         self.driver.get("https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html")
         
-    def delay(self, time):
+    def delay(self, time:str):
         """
-            Вводим значение 45 в поле id='delay'
+        Устанавливает значение задержки в поле ввода.
+
+        Параметры:
+        time (int или str): 45 в поле id='delay'.
         """
         delay_input = self.driver.find_element(By.ID, "delay")
         delay_input.clear()
         delay_input.send_keys(time)
         
-    def click_buttons(self, button1, button2, button3, button4):
+    def click_buttons(self, button1:str, button2:str, button3:str, button4:str):
         """
-            Нажимаем на кнопки 7, +, 8, =
+        Нажимает на последовательность кнопок на калькуляторе.
+
+        Параметры:
+        button1 (str): 7.
+        button2 (str): +.
+        button3 (str): 8.
+        button4 (str): =.
+
+        Побочные эффекты:
+        Нажимает на кнопки на веб-странице и ожидает, пока результат не будет отображен.
         """
         elements = self.driver.find_elements(By.CLASS_NAME, "btn-outline-primary")
         elements.extend(self.driver.find_elements(By.CLASS_NAME, "btn-outline-success"))
@@ -41,9 +54,9 @@ class Calculaytor:
         WebDriverWait(self.driver, 46).until(EC.text_to_be_present_in_element((By.CLASS_NAME, 'screen'), '15'))
 
     
-    def result_window(self):
+    def result_window(self) -> int:
         """
-            Проверяем, что в окне отобразится результат 15
+        Получает элемент окна с результатом вычислений.
         """
         return self.driver.find_element(By.CLASS_NAME, "screen")
         
