@@ -6,8 +6,11 @@ class Forma:
         self.driver = driver
         self.driver.get("https://bonigarcia.dev/selenium-webdriver-java/data-types.html")
 
-    # Заполните форму значениями
-    def send_keys(self, first_name, last_name, address, e_mail, phone, zip_code, city, country, job_position, company):   
+    
+    def send_keys(self, first_name, last_name, address, e_mail, phone, zip_code, city, country, job_position, company):
+        """
+            Заполняем форму значениями
+        """   
         self.driver.find_element(By.NAME, 'first-name').send_keys(first_name) 
         self.driver.find_element(By.NAME, 'last-name').send_keys(last_name) 
         self.driver.find_element(By.NAME, 'address').send_keys(address) 
@@ -19,15 +22,22 @@ class Forma:
         self.driver.find_element(By.NAME, 'job-position').send_keys(job_position)
         self.driver.find_element(By.NAME, 'company').send_keys(company)
 
-        # Нажать кнопку Submit
+        """
+            Нажимаем кнопку Submit
+        """
         self.driver.find_element(By.CLASS_NAME, 'btn-outline-primary').click()
 
-    # Проверка, что поле Zip code подсвечено красным
+    
     def zip_code_field(self):
+        """
+            Проверяем, что поле Zip code подсвечено красным
+        """
         return  self.driver.find_element(By.ID, "zip-code")
         
-
+    
     def other_fields(self):
-    # Проверьте (assert), что остальные поля подсвечены зеленым
+        """
+            Проверяем, что остальные поля подсвечены зеленым
+        """
         return self.driver.find_elements(By.CLASS_NAME, "alert-success")
         

@@ -7,6 +7,9 @@ class API:
         self.url = url
 
     def get_token(self, user='raphael', password='cool-but-crude'):
+        """
+            Залогиниться и получить токен
+        """
         creds = {
             'username': user,
             'password': password
@@ -15,6 +18,9 @@ class API:
         return resp.json()["userToken"]
 
     def create_company(self, name, description=''):
+        """
+            Получить id компании
+        """
         company = {
             "name": name,
             "description": description
@@ -25,6 +31,9 @@ class API:
         return resp.json()
 
     def get_list_employee(self, id):
+        """
+            Вывести список пользователей
+        """
         my_params = {
             "company": id
         }
@@ -36,6 +45,9 @@ class API:
         return resp.json()
 
     def add_new_employee(self, new_id, first_name, last_name):
+        """
+            Добавить нового пользователя
+        """
         employee = {
             "id": 1,
             "firstName": first_name,
@@ -55,6 +67,9 @@ class API:
         return resp.json()
 
     def update_employee_info(self, id_employee, last_name, email):
+        """
+            Изменить пользователя
+        """
         user_info = {
             "lastName": last_name,
             "email": email,

@@ -42,12 +42,18 @@ class BD:
     def create_table(self):
         with self.db.connect() as connection:
             connection.execute(self.scripts["create"])
-
+    
     def get_employees(self):
+        """
+            Вывести список пользователей
+        """
         with self.db.connect() as connection:
             return list(connection.execute(self.scripts["select"]).mappings())
-
+    
     def insert_employee(self, first_name, last_name, phone, company_id):
+        """
+            Добавить нового пользователя
+        """
         with self.db.connect() as connection:
             query = self.scripts["insert"]
             result = connection.execute(query, {
@@ -58,8 +64,11 @@ class BD:
             })
             connection.commit()
             return result.fetchone()[0]
-
+    
     def update_employee(self, employee_id, first_name, last_name, middle_name, phone, email, avatar_url):
+        """
+            Отредактировать пользователя по id
+        """
         with self.db.connect() as connection:
             connection.execute(self.scripts["update"], {
                 'employee_id': employee_id,
@@ -72,11 +81,17 @@ class BD:
             connection.commit()
 
     def get_employee_by_id(self, employee_id):
+        """
+            Вывести список пользователей
+        """
         with self.db.connect() as connection:
             result = connection.execute(self.scripts["get_employee_by_id"], {'employee_id': employee_id})
         return result.fetchone()
 
     def delete_employee(self, employee_id):
+        """
+            Удалить пользователя по id
+        """
         with self.db.connect() as connection:
             connection.execute(self.scripts["delete"], {'employee_id': employee_id})
             connection.commit()
