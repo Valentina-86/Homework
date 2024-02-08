@@ -1,16 +1,22 @@
-from bd import BD
-from employee import API
+import allure
+from table import Table
+from api import API
 
 
 employee_id = None
 api = API("https://x-clients-be.onrender.com")
-db = BD("postgresql://x_clients_user:x7ngHjC1h08a85bELNifgKmqZa8KIR40@dpg-cn1542en7f5s73fdrigg-a.frankfurt-postgres.render.com/x_clients_xxet")
+db = Table("postgresql://x_clients_user:x7ngHjC1h08a85bELNifgKmqZa8KIR40@dpg-cn1542en7f5s73fdrigg-a.frankfurt-postgres.render.com/x_clients_xxet")
 
 
 
 def setup_module(module):
     db.create_table()
 
+@allure.story('Добавление пользователя')
+@allure.feature('CREATE')
+@allure.title('Добавление нового пользователя')
+@allure.description('Добавление пользователя при помощи id компании')
+@allure.severity('BLOCKER')
 def test_create_and_get_employee():
     global employee_id
     name = "SkyPro"
@@ -25,6 +31,11 @@ def test_create_and_get_employee():
     employee_list = api.get_list_employee(new_company_id)
     assert any(employee["firstName"] == "Mikki" and employee["lastName"] == "Maus" for employee in employee_list)
 
+@allure.story('Редактирование пользователя')
+@allure.feature('UPDATE')
+@allure.title('Редактирование пользователя по id')
+@allure.description('Редактирование пользователя при помощи id пользователя')
+@allure.severity('BLOCKER')
 def test_update_employee():
     global employee_id
     db.update_employee(employee_id, "Jhon", "Connor", "Middle", "+66666666", "mikki.mos@example.com", "http://test.com")
@@ -37,6 +48,11 @@ def test_update_employee():
     assert updated_employee["email"] == "mikki.mos@example.com"
     assert updated_employee["avatar_url"] == "http://test.com"
 
+@allure.story('Удаление пользователя')
+@allure.feature('DELETE')
+@allure.title('Удаление пользователя по id')
+@allure.description('Удаление пользователя при помощи id пользователя')
+@allure.severity('BLOCKER')
 def test_delete_employee():
     employees = db.get_employees()
 
